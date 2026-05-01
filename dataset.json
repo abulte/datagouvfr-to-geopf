@@ -1,0 +1,120 @@
+{
+"id": "69f44162620029ea7beff6ea",
+"title": "Épisodes de pollution prévus ou constatés",
+"acronym": null,
+"slug": "episodes-pollution",
+"description": "Niveau de vigilance pollution atmosphérique pour les bassins d’air de la région Bourgogne-Franche-Comté pour la veille/le jour même/le lendemain.Niveau de vigilance pollution atmosphérique constatés pour les bassins d’air de la région Bourgogne-Franche-Comté pour l’année dernière et jusqu’à la veille.",
+"description_short": null,
+"created_at": "2025-12-31T00:00:00+00:00",
+"last_modified": "2026-05-01T06:00:02.896000+00:00",
+"deleted": null,
+"private": false,
+"tags": [
+"zone-de-pollution-potentielle"
+],
+"badges": [],
+"resources": {
+"rel": "subsection",
+"href": "https://www.data.gouv.fr/api/2/datasets/69f44162620029ea7beff6ea/resources/?page=1&page_size=50",
+"type": "GET",
+"total": 5
+},
+"community_resources": {
+"rel": "subsection",
+"href": "https://www.data.gouv.fr/api/1/datasets/community_resources/?dataset=69f44162620029ea7beff6ea&page=1&page_size=50",
+"type": "GET",
+"total": 0
+},
+"frequency": "unknown",
+"frequency_date": null,
+"extras": {
+"Couverture Géographique": "regionale",
+"Fréquence d'actualisation": "daily",
+"Granularité": "departement",
+"Type IDéO BFC": "['donnees-ouvertes', 'donnees-geographiques', 'donnees-tabulaires']",
+"databfc-type": "dataset",
+"inspire_url": "https://inspire.ternum-bfc.fr/geonetwork/srv/fre/catalog.search#/metadata/c0832d73-137c-4e05-93f6-8521ef63345a"
+},
+"metrics": {
+"discussions": 0,
+"discussions_open": 0,
+"reuses": 0,
+"reuses_by_months": 0,
+"dataservices": 0,
+"followers": 0,
+"followers_by_months": 0,
+"views": 0,
+"resources_downloads": 0
+},
+"organization": {
+"badges": [
+{
+"kind": "public-service"
+},
+{
+"kind": "certified"
+}
+],
+"name": "Atmo Bourgogne-Franche-Comté",
+"acronym": "Atmo BFC",
+"slug": "atmo-bourgogne-franche-comte",
+"logo": "https://static.data.gouv.fr/avatars/c4/750648fdb1472c99e74ef720533d69.jpg",
+"logo_thumbnail": "https://static.data.gouv.fr/avatars/c4/750648fdb1472c99e74ef720533d69-100.jpg",
+"page": "https://www.data.gouv.fr/organizations/atmo-bourgogne-franche-comte",
+"permissions": {
+"edit": false,
+"delete": false,
+"members": false,
+"harvest": false,
+"private": false
+},
+"uri": "https://www.data.gouv.fr/api/1/organizations/atmo-bourgogne-franche-comte/",
+"id": "5ddbf5ff6f444103e11e9d3d",
+"class": "Organization"
+},
+"owner": null,
+"temporal_coverage": null,
+"spatial": null,
+"license": "odc-odbl",
+"access_type": "open",
+"access_audiences": [],
+"access_type_reason_category": null,
+"access_type_reason": null,
+"authorization_request_url": null,
+"uri": "https://www.data.gouv.fr/api/1/datasets/episodes-pollution/",
+"page": "https://www.data.gouv.fr/datasets/episodes-pollution",
+"last_update": "2025-12-31T00:00:00+00:00",
+"archived": null,
+"quality": {
+"license": true,
+"temporal_coverage": false,
+"spatial": false,
+"update_frequency": false,
+"dataset_description_quality": true,
+"has_resources": true,
+"has_open_format": true,
+"all_resources_available": true,
+"resources_documentation": true,
+"score": 0.5555555555555556
+},
+"harvest": {
+"backend": "CKAN",
+"created_at": "2025-12-31T00:00:00+00:00",
+"source_id": "5f96c70670f8d1bfa3a89c35",
+"remote_id": "bfdf46c5-9d12-4423-8ca9-900eaad9fd4c",
+"domain": "ckan2.data.arnia-bfc.fr",
+"last_update": "2026-05-01T06:00:02.906000+00:00",
+"remote_url": "https://ckan2.data.arnia-bfc.fr/dataset/episodes-pollution"
+},
+"internal": {
+"created_at_internal": "2026-05-01T06:00:02.896000+00:00",
+"last_modified_internal": "2026-05-01T06:00:02.896000+00:00"
+},
+"contact_points": [],
+"featured": false,
+"permissions": {
+"delete": false,
+"edit": false,
+"edit_resources": false
+}
+}
