@@ -1,0 +1,212 @@
+source: https://geoplateforme.github.io/tutoriels/production/vecteur/derivation/exemple1/
+
+[Donnée vecteur](../../../tags/#tag:donnée-vecteur) [Dérivation](../../../tags/#tag:dérivation) [Injection](../../../tags/#tag:injection)
+
+# Exemple d'ajout de colonne avec valeur paramétrable
+
+Dans cet exemple, on part de la donnée des écorégions du tutoriel de base, publiée en WFS, que l'on va modifier en ajoutant une colonne.
+
+## Téléversement d'un fichier SQL de dérivation
+
+Toutes ces actions vont être définie au format SQL, dans un fichier statique. Ce fichier n'a pas vocation à contenir de la donnée, mais simplement des instructions de modification
+
+Exemple :
+
+[derivation.sql](../../../assets/data/derivation.sql)
+
+Contenu
+    
+    
+    ALTER TABLE ecoregions ADD COLUMN test_add_column integer; 
+    
+    UPDATE ecoregions
+       SET test_add_column = nnh * {{ params.multiply }};
+    
+
+Ce fichier va permettre :
+
+  * D'ajouter une colonne à la table `ecoregions`
+  * De remplir avec pour valeur celle de l'attribut `nnh` multipliée par un nombre fourni en paramètre de l'exécution de traitement. La syntaxe `{{ params.<x> }}` permet de rendre dynamique ces scripts de dérivation.
+
+/datastores/{datastore}/statics
+
+Corps de requête MultipartCorps de réponse JSON
+
+  * file = `<derivation.sql>`
+  * type = "DERIVATION-SQL"
+  * name = "Ajout d'une colonne et calcul par multiplication"
+
+
+    
+    
+    {
+        "name": "Ajout d'une colonne et calcul par multiplication",
+        "type": "DERIVATION-SQL",
+        "_id": "{sql derivation}",
+        "type_infos": {
+            "used_variables": [
+                "params.multiply"
+            ]
+        }
+    }
+    
+
+## Contrôle des données avant dérivation
+
+En consultant la donnée en WFS, notamment sa table attributaire, on retrouve le contenu suivant.
+
+## Jeu de la dérivation sur une donnée
+
+### Configuration de l'exécution de traitement
+
+On utilise le traitement de dérivation vecteur.
+
+Points d'attentions
+
+Pour la donnée en sortie, on ne précise pas un nom, mais l'identifiant de notre donnée stockée initialisée juste avant. On précise également cette donnée comme étant en entrée de notre exécution. On va donc modifier une donnée plutôt qu'en créer une nouvelle.
+
+/datastores/{datastore}/processings/executions
+
+Corps de requête JSONCorps de réponse JSON
+    
+    
+    {
+        "processing": "2c18eda8-d30c-42ab-8760-ec16d8929de5",
+        "inputs": {
+            "stored_data": [
+                "{stored data}"
+            ]
+        },
+        "output": {
+            "stored_data": {
+                "id": "{stored data}"
+            }
+        },
+        "parameters": {
+            "derivations": [
+                "{sql derivation}"
+            ],
+            "params": {
+                "multiply": "3"
+            }
+        }
+    }
+    
+    
+    
+    {
+        "processing": {
+            "name": "Génération ou mise à jour d’une donnée vecteur à partir d’une donnée vecteur",
+            "_id": "2c18eda8-d30c-42ab-8760-ec16d8929de5"
+        },
+        "status": "CREATED",
+        "creation": "2024-02-16T14:51:24.152451997Z",
+        "inputs": {
+            "upload": []
+            "stored_data": [
+                {
+                    "name": "Pays et éco-régions",
+                    "type": "VECTOR-DB",
+                    "status": "MODIFYING",
+                    "srs": "EPSG:3857",
+                    "_id": "{stored data}"
+                }
+            ]
+        },
+        "output": {
+            "stored_data": {
+                "name": "Pays et éco-régions",
+                "type": "VECTOR-DB",
+                "status": "MODIFYING",
+                "srs": "EPSG:3857",
+                "_id": "{stored data}"
+            }
+        },
+        "parameters": {
+            "derivations": [
+                "{sql derivation}"
+            ],
+            "params": {
+                "multiply": "3"
+            }
+        },
+        "_id": "{execution dérivation}}"
+    }
+    
+
+### Déclenchement de cette exécution
+
+/datastores/{datastore}/processings/executions/{execution dérivation}/launch
+
+## Consultation de la donnée
+
+On peut voir le nouveau champ apparaître dans la description de la donnée
+
+/datastores/{datastore}/stored_data/{stored data}
+
+Corps de réponse JSON
+    
+    
+    {
+        "name": "Pays et écorégions",
+        "type": "VECTOR-DB",
+        ....
+        "_id": "{stored data}",
+        "type_infos": {
+            "relations": [
+                {
+                    "name": "pays",
+                    "type": "TABLE",
+                    "attributes": {
+                        "id": "integer",
+                        "un": "integer",
+                        "fid": "integer",
+                        "lat": "double precision",
+                        "lon": "double precision",
+                        "area": "integer",
+                        "fips": "character varying(2)",
+                        "geom": "geometry(Polygon,4326)",
+                        "iso2": "character varying(2)",
+                        "iso3": "character varying(3)",
+                        "name": "character varying(50)",
+                        "region": "integer",
+                        "pop2005": "bigint",
+                        "subregion": "integer"
+                    },
+                    "primary_key": [
+                        "fid"
+                    ]
+                },
+                {
+                    "name": "ecoregions",
+                    "type": "TABLE",
+                    "attributes": {
+                        "id": "integer",
+                        "fid": "integer",
+                        "nnh": "integer",
+                        "geom": "geometry(Polygon,4326)",
+                        "color": "character varying",
+                        "realm": "character varying",
+                        "eco_name": "character varying",
+                        "nnh_name": "character varying",
+                        "color_bio": "character varying",
+                        "color_nnh": "character varying",
+                        "biome_name": "character varying",
+                        "test_add_column": "integer"
+                    },
+                    "primary_key": [
+                        "fid"
+                    ]
+                }
+            ]
+        }
+    }
+    
+
+## Contrôle des données après dérivation
+
+Comme la structure a changé (ajout d'une colonne), il faut resynchroniser l'offre pour que le serveur de diffusion prenne connaissance de ce changement. Dans le cas d'un ajout, la consultation fonctionne mais la nouvelle colonne n'apparait pas. Dans le cas d'une suppression, on aura des erreurs car le serveur de diffusion aura des échec de lecture sur la colonne disparue. De manière générale, quand la structure est modifiée avec ce traitement, il est préférable de resynchroniser toutes les offres utilisant la donnée stockée modifiée.
+
+/datastores/{datastore}/offerings/{offering wfs}
+
+Si vous utilisez QGis, il peut être nécessaire de vider le cache pour qu'il ne garde pas l'ancienne description de la couche WFS. On retrouve désormais le contenu suivant.

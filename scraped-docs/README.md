@@ -1,0 +1,1 @@
+Scraped snapshot of https://geoplateforme.github.io on 2026-05-02. Source was not available on github.

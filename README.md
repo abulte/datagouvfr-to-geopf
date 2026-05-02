@@ -218,6 +218,30 @@ https://cartes.gouv.fr/tableau-de-bord/entrepots/{GEOPF_DATASTORE_ID}/donnees
 
 ---
 
+## Documentation scraping
+
+The geoplateforme public docs span three sub-sites (~76 pages total, all in French, no public source repo):
+
+- `https://geoplateforme.github.io/entrepot/production/` — concepts, components, OpenAPI
+- `https://geoplateforme.github.io/sdk-entrepot/` — Python SDK
+- `https://geoplateforme.github.io/tutoriels/production/` — step-by-step workflows
+
+### Scraping
+
+`scrape.py` fetches all 67 substantive pages, extracts the `<article>` content, converts it to markdown via `html2text`, and saves it under `scraped-docs/{entrepot,sdk,tutoriels}/`. Raw source material is preserved for re-summarization without re-scraping.
+
+```bash
+uv run --with html2text scrape.py
+```
+
+`html2text` is intentionally kept out of `pyproject.toml` (scraping is a one-off tool, not a project dependency).
+
+### Summary
+
+`geopf-docs-summary.md` is a condensed English developer reference generated from the scraped pages. It covers all sections with intro paragraphs, workflow flow lines, API endpoints inline, and a constants/UUIDs lookup table at the end. French platform terms (entrepôt, livraison, offre, etc.) are kept as-is. Every section links back to its source page.
+
+---
+
 ## Architecture
 
 The platform is built in three independent layers with no enforced consistency between them.
