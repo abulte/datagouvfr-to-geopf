@@ -52,6 +52,11 @@ Implementation:
 - Full JS/front: CORS are open, so possible ; but beware of long polling (several minutes) that could leave the object in a transient state on geopf ;
 - Drive a backend sync with loader/resume feature on front: probably best for future-proofing? And faster prototyping. But beware of auth sharing: send the oauth token for processing on the backend? Could be acceptable if token are medium-lived: long enough for the process to succeed, short enough for it to not be a security concern. It looks like it's twelve hours, kind of perfect.
 
+Metadata sync, currently missing mandatory metadata for service creation (can be filled by user on geopf):
+- Catégorie thématique: extract from the tags list against know Inspire vocabulary?
+- Adresse électronique de contact sur les métadonnées: extract from contact points?
+- Adresse électronique (données): extract from contact points?
+
 ## 4. Services Sync (geopf → datagouv)
 
 Periodic job that pulls published offerings back to data.gouv.fr as resources.
