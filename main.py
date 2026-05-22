@@ -82,7 +82,7 @@ def upload_file(name: str, *, file: Path | None = None, srs: str = "EPSG:4326", 
     datastore_id = get_datastore_id()
     file_identifier = f"{dataset['id']}-{name}"
 
-    if not skip_data:
+    if not skip_data and file:
         ingest_dataset(datastore_id, name=name, file=file, srs=srs)
 
     print("\n[metadata] Uploading and publishing metadata...")
