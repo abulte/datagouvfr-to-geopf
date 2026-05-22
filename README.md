@@ -202,11 +202,19 @@ The value must be identical across all three. The cartes.gouv.fr UI then groups 
 cp .env.example .env
 # Fill in GEOPF_TOKEN and GEOPF_DATASTORE_ID
 
+uv run python main.py --help
+```
+
+`main.py` exposes two commands via [minicli](https://github.com/jamesturk/minicli).
+
+### `upload-file` — ingest data and publish metadata
+
+```bash
 # Full pipeline: ingest data + upload metadata
-uv run python main.py my-test-01 --file example.gpkg --srs EPSG:4326
+uv run python main.py upload-file my-test-01 --file example.gpkg --srs EPSG:4326
 
 # Metadata only (skip data ingestion)
-uv run python main.py my-test-01 --skip-data
+uv run python main.py upload-file my-test-01 --skip-data
 ```
 
 The `name` argument is used as the `datasheet_name` tag value and is appended to the dataset ID to form a unique `fileIdentifier` (e.g. `69f44162620029ea7beff6ea-my-test-01`).
@@ -215,6 +223,25 @@ After a successful run, the fiche is visible at:
 ```
 https://cartes.gouv.fr/tableau-de-bord/entrepots/{GEOPF_DATASTORE_ID}/donnees
 ```
+
+### `get-services` — list published offerings for a fiche
+
+Once a fiche has been created, a user can configure WFS/WMS/WMTS services on it from the cartes.gouv.fr UI. This command retrieves all published offerings for a given datasheet name:
+
+```bash
+uv run python main.py get-services my-test-01
+```
+
+**How it works:**
+1. Fetches all configurations in the datastore tagged `datasheet_name=<name>` — cartes.gouv.fr tags configurations with `datasheet_name` when a service is created through its UI
+2. For each configuration, fetches its offerings (`GET /configurations/{id}/offerings`)
+3. Prints type, layer name, status, and a GetCapabilities URL for each offering
+
+**Offering payload:** offerings carry only operational fields — `type`, `status`, `layer_name`, `open`, `available`, `urls` (ready-made service URLs), plus back-references to the configuration and endpoint. Title/description live in the ISO 19115 metadata record in the CSW, linked from the configuration's `metadata` array.
+
+**Entity chain:** `stored_data → configuration → offering → endpoint`
+
+A configuration describes how a stored_data is served (layer name, bbox, relations). An offering links a configuration to a diffusion endpoint (WFS/WMS/WMTS server); creating one triggers publication to the server. The `available` boolean toggles access without touching permissions.
 
 ---
 
@@ -295,9 +322,12 @@ End-to-end publication from data.gouv.fr to cartes.gouv.fr is feasible via the e
 
 The platform uses Keycloak with the `gpf-warehouse` public client. For users authenticating via a third-party IdP (agent using ProConnect, etc.), none of the standard programmatic flows work: device flow is disabled for this client, and authorization code flow has no localhost redirect URI registered. The only working approach for this POC is a manually copied Bearer token from the Swagger UI. A proper integration requires IGN to either register a redirect URI for a dedicated client or provide a service account with `client_credentials` grant.
 
+-> Swagger is at https://data.geopf.fr/api/swagger-ui/index.html#/, click "Authorize"
+
 ### Open questions / next steps
 
 - Can the `datasheet_name` tag be set at upload creation time (in the body), or must it always be a separate POST to `/tags`? The API accepts it as a separate call; we haven't tested whether the creation body accepts a `tags` field.
 - The metadata `fileIdentifier` is currently scoped as `{dataset_id}-{name}` to avoid collisions during testing. In production it should probably just be the dataset ID.
 - Spatial coverage defaults to France metro bbox when `spatial` is null on the data.gouv.fr dataset. Datasets with actual geographic coverage should resolve this from the data itself (e.g. from the GeoPackage extent returned by the vector check).
 - The pipeline does not yet link the metadata record to the stored_data via a configuration/offering. This link may be needed for the fiche detail page to show the metadata alongside the data.
+- Querying published services is now supported via `get-services`. The next step would be automating service creation (POST a configuration + offering) rather than requiring manual setup through the cartes.gouv.fr UI.

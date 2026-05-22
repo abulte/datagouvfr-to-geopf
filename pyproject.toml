@@ -5,6 +5,7 @@ description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
     "jinja2>=3.1.6",
+    "minicli>=0.5.3",
     "python-dotenv>=1.2.2",
     "sdk-entrepot-gpf>=0.1.44",
 ]

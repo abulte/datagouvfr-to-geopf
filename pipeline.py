@@ -159,7 +159,7 @@ def wait_for_stored_data(datastore_id: str, exec_id: str, timeout: int = 900) ->
 
 # --- main entry point ---
 
-def ingest_dataset(datastore_id: str, dataset: dict, name: str, file: Path, srs: str = "EPSG:4326") -> str:
+def ingest_dataset(datastore_id: str, name: str, file: Path, srs: str = "EPSG:4326") -> str:
     """Full pipeline: file → livraison → integration → stored_data. Returns stored_data ID."""
     print(f"\n[1/4] Using file: {file}")
     filename, content = file.name, file.read_bytes()
