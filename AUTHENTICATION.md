@@ -48,8 +48,9 @@ The route names mirror the existing ProConnect integration in udata (`/api/1/pro
 - Grants: `authorization_code` + `refresh_token`.
 - Callback URLs (route mirrors the existing `/api/1/proconnect/auth` convention in udata):
   - Prod: `https://www.data.gouv.fr/api/1/geopf/auth`
-  - Preprod/demo: `https://demo.data.gouv.fr/api/1/geopf/auth`
-  - Local dev: `http://localhost:7000/api/1/geopf/auth` *(confirm dev port)*
+  - Demo: `https://demo.data.gouv.fr/api/1/geopf/auth`
+  - Dev: `https://dev.data.gouv.fr/api/1/geopf/auth`
+  - Local dev: `http://dev.local:7000/api/1/geopf/auth`
 - Scopes: "default" — confirmed by geopf, the user's own rights on geopf apply.
 
 ## Token lifecycle
